@@ -2,10 +2,19 @@
 
 var gBoard
 var gLevel = { SIZE: 4, MINES: 2 }
-var gGame
+var gGame = { isOn: true, shownCount: 0, markedCount: 0, secsPassed: 0 }
 const BOMB = '💣'
 const FLAG = '🚩'
-const colors = {1: 'blue', 2: 'green', 3: 'red', 4: 'purple', 5: 'maroon', 6: 'turquoise', 7: 'black', 8: 'grey'}
+const colors = {
+  1: 'blue',
+  2: 'green',
+  3: 'red',
+  4: 'purple',
+  5: 'maroon',
+  6: 'turquoise',
+  7: 'black',
+  8: 'grey',
+}
 
 // initioalize the game
 function onInitGame() {
@@ -74,30 +83,92 @@ function findNeighbors(board, cellI, cellJ) {
   return neighbors
 }
 
-function onCellClicked(elCell,i,j){
-  var neighbors = findNeighbors(gBoard, i, j)
-  showCell(elCell, gBoard[i][j])
-  elCell.classList.toggle('hide-cell')
-  console.log(neighbors);
+function onCellClicked(elCell, i, j) {
+  var cell = gBoard[i][j]
+  if (cell.isMarked || cell.isShown) return
+  if (cell.isMine) {
+    elCell.innerHTML = BOMB
+  } else if (cell.minesAroundCount) {
+    elCell.innerHTML = cell.minesAroundCount
+  } else if (!cell.minesAroundCount) {
+    // elCell.innerHTML = findNeighbors(gBoard,i,j)
+    var expands = findNeighbors(gBoard,i,j)
+    expands.forEach(element => { element.isShown = true})
+    // expandShown(gBoard, i, j)
+  }
+  elCell.classList.remove('cell-start')
+  elCell.classList.add('cell-clicked')
+  cell.isShown = true
+  checkGameOver()
 }
-
-
-
 
 function showCell(elCell, cell) {
-  if (cell.isShown) return;
-  if (cell.isMarked) return;
+  if (cell.isShown) return
+  if (cell.isMarked) return
   if (cell.isMine) {
-    elCell.innerHTML = BOMB;
-  } else if (cell.minesAroundCount) elCell.innerHTML = cell.minesAroundCount;
-  else if (!cell.minesAroundCount) elCell.innerHTML = "";
-  elCell.style.opacity = 1;
-  cell.isShown = true;
+    elCell.innerHTML = BOMB
+  } else if (cell.minesAroundCount) elCell.innerHTML = cell.minesAroundCount
+  else if (!cell.minesAroundCount) elCell.innerHTML = ''
+  elCell.style.opacity = 1
+  cell.isShown = true
+}
+// function expandShown(board, elCell, i, j) {
+//   if (!board[i][j].minesAroundCount || board[i][j].isMine) return
+
+//   // if cell has already been shown, do nothing
+//   if (board[i][j].isShown) return
+
+//   // reveal the cell
+//   showCell(elCell, board[i][j])
+//   elCell.classList.add('cell-clicked')
+//   // if there are no mines around the cell, recursively reveal the neighboring cells
+//   if (!board[i][j].minesAroundCount) {
+//     const neighbors = findNeighbors(board, i, j)
+//     for (var neighbor of neighbors) {
+//       if (!neighbor.isMarked && !neighbor.isShown) {
+//         const neighborCell = document.querySelector(
+//           `[data-i='${neighbor.i}'][data-j='${neighbor.j}']`
+//         )
+//         expandShown(board, neighborCell, neighbor.i, neighbor.j)
+//       }
+//     }
+//   }
+// }
+
+function onCellMarked(elCell, i, j) {
+  if (gBoard[i][j].isShown) return
+  if (!gBoard[i][j].isMarked) {
+    gBoard[i][j].isMarked = true
+    elCell.innerHTML = FLAG
+  } else {
+    elCell.innerHTML = ''
+    gBoard[i][j].isMarked = false
+  }
+  document.addEventListener('contextmenu', event => event.preventDefault())
 }
 
+function checkGameOver() {
+  var mineCount = 0
+  var nonMineShownCount = 0
+  for (var i = 0; i < gBoard.length; i++) {
+    for (var j = 0; j < gBoard[0].length; j++) {
+      if (gBoard[i][j].isMine) {
+        mineCount++
+      } else if (gBoard[i][j].isShown) {
+        nonMineShownCount++
+      }
+    }
+  }
+  if (nonMineShownCount === gLevel.SIZE * gLevel.SIZE - gLevel.MINES) {
+    gameOver()
+  } else if (mineCount === gLevel.MINES) {
+    gameOver()
+  }
+}
 
-
-
+function gameOver() {
+  gGame.isOn = false
+}
 
 // *utils
 
@@ -108,9 +179,7 @@ function renderBoard(board, selector) {
   for (var i = 0; i < board.length; i++) {
     strHTML += '<tr>'
     for (var j = 0; j < board[0].length; j++) {
-      const cell = board[i][j]
-      const cellValue = cell.isMine ? BOMB : cell.minesAroundCount
-      strHTML += `<td class="cell-start" onclick="onCellClicked(this,${i},${j})"></td>`
+      strHTML += `<td oncontextmenu="onCellMarked(this,${i},${j})" class="cell-start" onclick="onCellClicked(this,${i},${j})"></td>`
     }
     strHTML += '</tr>'
   }
