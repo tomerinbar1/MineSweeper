@@ -1,0 +1,39 @@
+body {
+    text-align: center;
+}
+
+h1 {
+    display: block;
+    margin: 10px auto;
+}
+
+table {
+    background-color: transparent;
+}
+
+.gameBoard {
+    display: inline-block;
+    text-align: center;
+}
+
+.cell-start {
+    background-image: url('img/closed.svg');
+    width: 60px;
+    height: 60px;
+    font-size: 22px;
+    line-height: 23px;
+    background-size: 100%;
+    font-weight: 700;
+    text-align: center;
+}
+
+.cell-clicked {
+    width: 60px;
+    height: 60px;
+    font-size: 22px;
+    line-height: 23px;
+    background-size: 100%;
+    font-weight: 700;
+    text-align: center;
+    opacity: 1;
+}
