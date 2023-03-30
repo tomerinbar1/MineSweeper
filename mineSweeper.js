@@ -84,6 +84,7 @@ function setMinesNegsCount(boardSize) {
 // find Neighbors
 function findNeighbors(board, cellI, cellJ) {
   var neighbors = []
+  // console.log('neighbors', neighbors);
   for (var i = cellI - 1; i <= cellI + 1; i++) {
     if (i < 0 || i > board.length - 1) continue
     for (var j = cellJ - 1; j <= cellJ + 1; j++) {
@@ -103,14 +104,13 @@ function onCellClicked(elCell, i, j) {
   if (gGame.isFirstClick) {
     gGame.isFirstClick = false
     randMinePos(i, j)
-    setMinesNegsCount(gLevel.MINES)
+    setMinesNegsCount(gLevel.SIZE)
   }
   showCell(elCell, cell)
   if (!cell.minesAroundCount && !cell.isMine && !cell.isMarked) {
     openEmptyCells(gBoard, i, j)
     
   }
-console.log(gBoard);
   checkGameOver()
 }
 
@@ -181,7 +181,6 @@ function gameOver() {
 
 function randMinePos(clickedCellI, clickedCellJ) {
   const minePos = [] // {i, j}
-  console.log(minePos);
   const mines = gLevel.MINES
   const cells = []
   for (let i = 0; i < gBoard.length; i++) {
