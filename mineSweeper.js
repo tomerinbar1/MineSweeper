@@ -27,7 +27,6 @@ const colors = {
 function onInitGame() {
   gBoard = buildBoard()
 
- 
   renderBoard(gBoard, '.gameBoard')
 }
 
@@ -102,14 +101,15 @@ function onCellClicked(elCell, i, j) {
   if (!gGame.isOn) return
   if (gBoard.isMarked) return
   if (gGame.isFirstClick) {
+    showCell(elCell, cell)
     gGame.isFirstClick = false
     randMinePos(i, j)
     setMinesNegsCount(gLevel.SIZE)
+  } else {
+    showCell(elCell, cell)
   }
-  showCell(elCell, cell)
   if (!cell.minesAroundCount && !cell.isMine && !cell.isMarked) {
     openEmptyCells(gBoard, i, j)
-    
   }
   checkGameOver()
 }
