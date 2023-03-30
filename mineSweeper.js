@@ -27,6 +27,7 @@ const colors = {
 function onInitGame() {
   gBoard = buildBoard()
 
+ 
   renderBoard(gBoard, '.gameBoard')
 }
 
@@ -99,17 +100,16 @@ function findNeighbors(board, cellI, cellJ) {
 function onCellClicked(elCell, i, j) {
   var cell = gBoard[i][j]
   if (!gGame.isOn) return
-  if (gBoard.isMarked) return
+  if (cell.isMarked) return
   if (gGame.isFirstClick) {
-    showCell(elCell, cell)
     gGame.isFirstClick = false
     randMinePos(i, j)
     setMinesNegsCount(gLevel.SIZE)
-  } else {
-    showCell(elCell, cell)
   }
+  showCell(elCell, cell)
   if (!cell.minesAroundCount && !cell.isMine && !cell.isMarked) {
     openEmptyCells(gBoard, i, j)
+    
   }
   checkGameOver()
 }
@@ -119,13 +119,20 @@ function showCell(elCell, cell) {
   if (cell.isMarked) return
   if (cell.isMine) {
     elCell.innerHTML = BOMB
-  } else if (cell.minesAroundCount) elCell.innerHTML = cell.minesAroundCount
-  else if (!cell.minesAroundCount)
+    elCell.style.opacity = 1
+  }
+  else if (cell.minesAroundCount) {
+    elCell.innerHTML = cell.minesAroundCount
+    elCell.style.opacity = 1
+  }
+  else if (!cell.minesAroundCount) {
     elCell.style.backgroundImage = 'url(img/empty.svg)'
-  elCell.style.opacity = 1
+    elCell.style.opacity = 1
+  }
   cell.isShown = true
   gGame.shownCount++
 }
+
 
 function openEmptyCells(board, cellI, cellJ) {
   var neighbors = findNeighbors(board, cellI, cellJ)
