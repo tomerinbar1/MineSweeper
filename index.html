@@ -2,24 +2,42 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mine Sweeper</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mine Sweeper</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body onload="onInitGame()">
-    <h1>Mine Sweeper Game</h1>
-    <h2>Time: <span id="timer">00:00</span></h2>
-    <div class="gameBoard"></div>
+  <h1>Mine Sweeper Game</h1>
+  <div class="wrapper">
+    <div class="container">
+      <div class="top-area-info">
+        <div class="hint">
+          <img src="img/HintOff.png" alt="" onclick="hints(this)" />
+          <img src="img/HintOff.png" alt="" onclick="hints(this)" />
+          <img src="img/HintOff.png" alt="" onclick="hints(this)" />
+          <button class='safe-btn' id="safe" onclick="onSafeButton(this)">Safe Click</button>
+        </div>
+        <div class="lives">Lives: <span class="lives-value"></span></div>
+        <button class="smiley" id="smiley-btn" onclick="restartGame()"></button>
+        <div class="timer">Time: <span class="timer-value">00:00</span></div>
+      </div>
+      <div class="gameBoard"></div>
+    </div>
+    <button class="game-level" onclick="gameLevel(1)">Beginner</button>
+    <button class="game-level" onclick="gameLevel(2)">Medium</button>
+    <button class="game-level" onclick="gameLevel(3)">Expert</button>
 
+      <div class="win-message"></div>
+      <div class="lose-message"></div>
 
-    
-    <script src="mineSweeper.js"></script>
-    <script src="timer.js"></script>
-    <script src="utils.js"></script>
-
+  </div>
+  <script src="mineSweeper.js"></script>
+  <script src="timer.js"></script>
+  <script src="utils.js"></script>
 </body>
+
 
 </html>

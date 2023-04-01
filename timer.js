@@ -30,5 +30,6 @@ function updateTimerDisplay() {
   var secondsFormatted = gTimerSeconds < 10 ? '0' + gTimerSeconds : gTimerSeconds;
   var minutesFormatted = gTimerMinutes < 10 ? '0' + gTimerMinutes : gTimerMinutes;
   var timerDisplay = minutesFormatted + ':' + secondsFormatted;
-  document.getElementById('timer').textContent = timerDisplay;
+  document.querySelector('.timer-value').textContent = timerDisplay;
+  return timerDisplay
 }
